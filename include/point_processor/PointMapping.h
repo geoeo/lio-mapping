@@ -218,7 +218,6 @@ class PointMapping {
   Transform transform_tobe_mapped_;
   Transform transform_bef_mapped_;
   Transform transform_aft_mapped_;
-  Transform transform_gt_;
 
   pcl::VoxelGrid<pcl::PointXYZI> down_size_filter_corner_;   ///< voxel filter for down sizing corner clouds
   pcl::VoxelGrid<pcl::PointXYZI> down_size_filter_surf_;     ///< voxel filter for down sizing surface clouds
@@ -226,7 +225,6 @@ class PointMapping {
 
   nav_msgs::Odometry odom_aft_mapped_;      ///< mapping odometry message
   tf::StampedTransform aft_mapped_trans_;   ///< mapping odometry transformation
-  tf::StampedTransform gt_trans_;   ///< mapping odometry transformation
 
   ros::Publisher pub_laser_cloud_surround_;    ///< map cloud message publisher
   ros::Publisher pub_full_cloud_;     ///< current full resolution cloud message publisher
@@ -237,7 +235,6 @@ class PointMapping {
   ros::Subscriber sub_laser_cloud_surf_last_;     ///< last surface cloud message subscriber
   ros::Subscriber sub_laser_full_cloud_;      ///< full resolution cloud message subscriber
   ros::Subscriber sub_laser_odometry_;          ///< laser odometry message subscriber
-  ros::Subscriber pose_gt_;          ///< laser odometry message subscriber
   ros::Subscriber sub_compact_data_;          ///< laser odometry message subscriber
 
   bool is_ros_setup_ = false;

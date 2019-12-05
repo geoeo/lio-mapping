@@ -99,10 +99,6 @@ PointMapping::PointMapping(float scan_period,
   aft_mapped_trans_.frame_id_ = "/camera_init";
   aft_mapped_trans_.child_frame_id_ = "/aft_mapped";
 
-  gt_trans_.frame_id_ = "/world";
-  gt_trans_.child_frame_id_ = "/gt_pose";
-
-
   // initialize frame counter
   frame_count_ = num_stack_frames_ - 1;
   map_frame_count_ = num_map_frames_ - 1;
@@ -172,8 +168,6 @@ void PointMapping::SetupRos(ros::NodeHandle &nh, bool enable_sub) {
     }
   }
 
-    pose_gt_ = nh.subscribe<geometry_msgs::PoseStamped>
-            ("/Robot_7/pose", 2, &PointMapping::GtPoseHandler, this);
 
 } // SetupRos
 
@@ -288,18 +282,6 @@ void PointMapping::LaserOdometryHandler(const nav_msgs::Odometry::ConstPtr &lase
   transform_sum_.pos.z() = float(laser_odom_msg->pose.pose.position.z);
 
   new_laser_odometry_ = true;
-}
-
-void PointMapping::GtPoseHandler(const geometry_msgs::PoseStamped::ConstPtr &gt_pose){
-
-    gt_trans_.stamp_ = gt_pose->header.stamp;
-    gt_trans_.setOrigin(tf::Vector3(gt_pose->pose.position.x,
-                                    gt_pose->pose.position.y,
-                                    gt_pose->pose.position.z));
-    gt_trans_.setRotation(tf::Quaternion(gt_pose->pose.orientation.x, gt_pose->pose.orientation.y, gt_pose->pose.orientation.z, gt_pose->pose.orientation.w));
-
-    tf_broadcaster_.sendTransform(gt_trans_);
-
 }
 
 void PointMapping::Reset() {
