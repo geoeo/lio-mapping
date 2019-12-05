@@ -340,6 +340,9 @@ target_link_libraries(${PROJECT_NAME}_save_bag_to_pcd
   ${point_processor_EXT_LIBS}
 )
 
+add_executable(${PROJECT_NAME}_gt_node src/gt_pub_node.cpp src/gt_pub.cpp)
+target_link_libraries(${PROJECT_NAME}_gt_node ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
