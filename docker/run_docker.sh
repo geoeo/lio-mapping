@@ -50,4 +50,4 @@ nvidia-docker run -it \
     --rm=true \
     --net=host \
     hyye/lio \
-    /bin/bash -c "source /workspace/devel/setup.bash; sleep 1; roslaunch lio test_indoor.launch & sleep 1; roslaunch lio map_4D_indoor.launch"
+    /bin/bash -c "source /workspace/devel/setup.bash; sleep 5; roslaunch lio test_indoor.launch & sleep 5; roslaunch lio map_4D_indoor.launch"

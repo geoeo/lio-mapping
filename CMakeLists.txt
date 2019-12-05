@@ -4,8 +4,10 @@ project(lio)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++14)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_BUILD_TYPE "Release")
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g")
+#set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
+#set(CMAKE_CXX_FLAGS_Debug "-O3 -Wall -g")
+set(CMAKE_CXX_FLAGS_Debug "-O3 -Wall")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -43,6 +45,12 @@ include_directories(${OpenCV_INCLUDE_DIR})
 
 find_package(Ceres REQUIRED)
 include_directories(${CERES_INCLUDE_DIR})
+
+MESSAGE("PCL information:")
+MESSAGE("  PCL_INCLUDE_DIRS: ${PCL_INCLUDE_DIRS}")
+MESSAGE("  PCL_LIBRARIES: ${PCL_LIBRARIES}")
+MESSAGE("  PCL_DEFINITIONS: ${PCL_DEFINITIONS}")
+MESSAGE("  PCL_VERSION: ${PCL_VERSION}")
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

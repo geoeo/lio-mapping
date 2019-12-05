@@ -53,7 +53,7 @@ using namespace mathutils;
 
 static ros::NodeHandlePtr nh_ptr;
 
-static std::string config_file = "/home/hyye/dev_ws/src/lio/config/test_config.yaml";
+static std::string config_file = "/home/marc/ROS/LIO/src/lio-mapping/config/indoor_test_config.yaml";
 
 void Run() {
 
@@ -185,7 +185,7 @@ int main(int argc, char **argv) {
     nh_ptr = boost::make_shared<ros::NodeHandle>(nh);
   }
 
-  nh_ptr->param("config_file", config_file, std::string("/home/hyye/dev_ws/src/lio/config/test_config.yaml"));
+  nh_ptr->param("config_file", config_file, std::string("/home/marc/ROS/LIO/src/lio-mapping/config/indoor_test_config.yaml"));
   FLAGS_alsologtostderr = true;
 
   Run();

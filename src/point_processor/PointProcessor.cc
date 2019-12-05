@@ -388,7 +388,7 @@ void PointProcessor::PointToRing(const PointCloudConstPtr &cloud_in,
     pub_start_ori_inferred_.publish(start_ori_inferred_msg);
   }  // if
 
-  DLOG(INFO) << "start_ori: " << start_ori_;
+//  rs(INFO) << "start_ori: " << start_ori_;
 
   for (int ring = 0; ring < num_rings_; ++ring) {
     // points in a ring
