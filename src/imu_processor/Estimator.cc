@@ -1914,11 +1914,13 @@ void Estimator::SolveOptimization() {
   options.trust_region_strategy_type = ceres::DOGLEG;
 //  options.trust_region_strategy_type = ceres::LEVENBERG_MARQUARDT;
   options.max_num_iterations = 10;
+//  options.max_num_iterations = 2;
   //options.use_explicit_schur_complement = true;
   //options.minimizer_progress_to_stdout = true;
   //options.use_nonmonotonic_steps = true;
 
   options.max_solver_time_in_seconds = 0.10;
+//  options.max_solver_time_in_seconds = 0.05;
 
   //region residual before optimization
   {

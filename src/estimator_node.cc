@@ -86,11 +86,12 @@ void Run() {
     tmp_int = fs_settings["opt_extrinsic"];
     estimator_config.opt_extrinsic = (tmp_int > 0);
 
+    Eigen::Matrix3d eigen_R = Eigen::Matrix3d::Identity();
+    Eigen::Vector3d eigen_T = Eigen::Vector3d::Zero();
+
     cv::Mat cv_R, cv_T;
     fs_settings["extrinsic_rotation"] >> cv_R;
     fs_settings["extrinsic_translation"] >> cv_T;
-    Eigen::Matrix3d eigen_R;
-    Eigen::Vector3d eigen_T;
     cv::cv2eigen(cv_R, eigen_R);
     cv::cv2eigen(cv_T, eigen_T);
 
