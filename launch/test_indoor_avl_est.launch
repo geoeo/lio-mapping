@@ -1,0 +1,16 @@
+<!-- -*- mode: XML -*- -->
+
+<launch>
+
+<!--  <node pkg="lio" type="lio_processor_node" name="lio_processor" output="log">-->
+<!--   	<param name="sensor_type" type="int" value="320" />-->
+<!--  </node>-->
+
+  <node pkg="lio" type="lio_estimator_node" name="lio_estimator" output="screen">
+    <param name="config_file" type="string" value="/home/marc/ROS/LIO/src/lio-mapping/config/indoor_test_config_avl.yaml" />
+	<param name="no_deskew" type="bool" value="true" />
+	<remap from="/imu/accel" to="/gnss/imustamped"/>
+	<remap from="/imu/odom" to="/gnss/imustamped"/>
+  </node>
+
+</launch>

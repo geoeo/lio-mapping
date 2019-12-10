@@ -11,7 +11,7 @@
     <param name="config_file" type="string" value="/home/marc/ROS/LIO/src/lio-mapping/config/outdoor_test_config_64.yaml" />
 	<param name="no_deskew" type="bool" value="true" />
 	<remap from="/imu/data" to="/kitti/oxts/imu"/>
-        <remap from="/velodyne_points" to="/kitti/velo/pointcloud"/>
+    <remap from="/velodyne_points" to="/kitti/velo/pointcloud"/>
   </node>
 
 </launch>

@@ -41,8 +41,10 @@
 
 #include <glog/logging.h>
 
+#include <std_msgs/Float64.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/Imu.h>
+#include <geometry_msgs/AccelStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_broadcaster.h>
@@ -72,6 +74,8 @@ typedef vector<PairMeasurement> PairMeasurements;
 
 struct MeasurementManagerConfig {
   string imu_topic = "/imu/data";
+  string imu_topic_accel = "/imu/accel";
+  string imu_topic_odom = "/imu/odom";
   string laser_topic = "/velodyne_points";
   string laser_odom_topic = "/aft_mapped_to_init"; // NOTE: Check if the time is too long
   string compact_data_topic = "/compact_data"; // NOTE: Check if the time is too long
@@ -86,6 +90,8 @@ class MeasurementManager {
   void ImuHandler(const sensor_msgs::ImuConstPtr &raw_imu_msg);
   void LaserOdomHandler(const nav_msgs::OdometryConstPtr &laser_odom_msg);
   void CompactDataHandler(const sensor_msgs::PointCloud2ConstPtr &compact_data_msg);
+  void ImuAccelHandler(const geometry_msgs::AccelStampedConstPtr &accel_data_msg);
+  void ImuOdomHandler(const nav_msgs::OdometryConstPtr &odom_data_msg);
 
   PairMeasurements GetMeasurements();
 
@@ -99,6 +105,8 @@ class MeasurementManager {
   mutex thread_mutex_;
   std::condition_variable con_;
   queue<ImuMsgConstPtr> imu_buf_;
+  queue<geometry_msgs::AccelStampedConstPtr> imu_accel_buf_;
+  queue<nav_msgs::OdometryConstPtr> imu_odom_buf_;
   queue<OdomMsgConstPtr> laser_odom_buf_;
   queue<CompactDataConstPtr> compact_data_buf_;
 
@@ -106,6 +114,8 @@ class MeasurementManager {
   double curr_time_ = -1;
 
   ros::Subscriber sub_imu_;
+  ros::Subscriber sub_imu_accel_;
+  ros::Subscriber sub_imu_odom_;
   ros::Subscriber sub_laser_odom_;
   ros::Subscriber sub_compact_data_;
 

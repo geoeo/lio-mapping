@@ -47,6 +47,10 @@ void MeasurementManager::SetupRos(ros::NodeHandle &nh) {
                                                               10,
                                                               &MeasurementManager::CompactDataHandler,
                                                               this);
+
+    sub_imu_accel_ = nh_.subscribe<geometry_msgs::AccelStamped>(mm_config_.imu_topic_accel,10,&MeasurementManager::ImuAccelHandler, this);
+    sub_imu_odom_ = nh_.subscribe<nav_msgs::Odometry>(mm_config_.imu_topic_odom,10,&MeasurementManager::ImuOdomHandler, this);
+
 //  sub_laser_odom_ =
 //      nh_.subscribe<nav_msgs::Odometry>(mm_config_.laser_odom_topic, 10, &MeasurementManager::LaserOdomHandler, this);
 }
@@ -86,8 +90,58 @@ PairMeasurements MeasurementManager::GetMeasurements() {
         imu_buf_.pop();
       }
 
-      // NOTE: one message after laser odom msg
-      imu_measurements.emplace_back(imu_buf_.front());
+        // NOTE: one message after laser odom msg
+      if(imu_accel_buf_.empty())
+        imu_measurements.emplace_back(imu_buf_.front());
+      else {
+          auto imu_msg = new sensor_msgs::Imu();
+          auto accel_msg = imu_accel_buf_.front();
+          auto odom_msg = imu_odom_buf_.front();
+
+          imu_msg->header = accel_msg->header;
+
+          geometry_msgs::Vector3 linear_accel = accel_msg->accel.linear;
+          linear_accel.x *= 9.81;
+          linear_accel.y *= 9.81;
+          linear_accel.z *= 9.81;
+          auto twist = odom_msg->twist;
+          double linear_accel_covariance[9] = {twist.covariance[0], twist.covariance[1], twist.covariance[2],
+                                               twist.covariance[6],twist.covariance[7], twist.covariance[8],
+                                               twist.covariance[12], twist.covariance[13],twist.covariance[14]};
+
+          geometry_msgs::Vector3 angular_accel = accel_msg->accel.angular;
+          //convert to radians
+          angular_accel.x = angular_accel.x* M_PIf32 / 180;
+          angular_accel.y = angular_accel.y* M_PIf32 / 180;
+          angular_accel.z = angular_accel.z* M_PIf32 / 180;
+          double angular_accel_covariance[9] = {twist.covariance[21], twist.covariance[22], twist.covariance[23],
+                                                twist.covariance[27],twist.covariance[28], twist.covariance[29],
+                                                twist.covariance[33], twist.covariance[34],twist.covariance[35]};
+
+
+          geometry_msgs::Quaternion orientation = odom_msg->pose.pose.orientation;
+          auto pose = odom_msg->pose;
+          double orientation_covariance[9] = {pose.covariance[21], pose.covariance[22], pose.covariance[23],
+                                              pose.covariance[27],pose.covariance[28], pose.covariance[29],
+                                              pose.covariance[33], pose.covariance[34],pose.covariance[35]};
+
+
+
+          imu_msg->orientation = orientation;
+          imu_msg->linear_acceleration = linear_accel;
+          imu_msg->angular_velocity = angular_accel;
+
+          for(int i = 0; i < 9; i++){
+              imu_msg->orientation_covariance[i] = orientation_covariance[i];
+              imu_msg->linear_acceleration_covariance[i] = linear_accel_covariance[i];
+              imu_msg->angular_velocity_covariance[i] = angular_accel_covariance[i];
+          }
+
+          imu_measurements.emplace_back(boost::shared_ptr<sensor_msgs::Imu const>(imu_msg));
+
+          imu_accel_buf_.pop();
+          imu_odom_buf_.pop();
+      }
 
       if (imu_measurements.empty()) {
         ROS_DEBUG("no imu between two image");
@@ -132,6 +186,28 @@ void MeasurementManager::ImuHandler(const sensor_msgs::ImuConstPtr &raw_imu_msg)
 //      PubLatestOdometry(states, header);
   }
 } // ImuHandler
+
+void MeasurementManager::ImuAccelHandler(const geometry_msgs::AccelStampedConstPtr &accel_data_msg){
+
+    imu_last_time_ = accel_data_msg->header.stamp.toSec();
+
+    buf_mutex_.lock();
+    imu_accel_buf_.push(accel_data_msg);
+    buf_mutex_.unlock();
+
+    con_.notify_one();
+
+}
+
+void MeasurementManager::ImuOdomHandler(const nav_msgs::OdometryConstPtr &odom_data_msg){
+
+    buf_mutex_.lock();
+    imu_odom_buf_.push(odom_data_msg);
+    buf_mutex_.unlock();
+
+    con_.notify_one();
+
+}
 
 void MeasurementManager::LaserOdomHandler(const nav_msgs::OdometryConstPtr &laser_odom_msg) {
   buf_mutex_.lock();
