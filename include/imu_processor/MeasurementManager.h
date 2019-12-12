@@ -86,6 +86,12 @@ struct MeasurementManagerConfig {
 class MeasurementManager {
 
  public:
+
+    explicit MeasurementManager(){
+        auto initial_odom = new nav_msgs::Odometry();
+        odom_msg_recent_ = boost::shared_ptr<nav_msgs::Odometry const>(initial_odom);
+    }
+
   virtual void SetupRos(ros::NodeHandle &nh);
   void ImuHandler(const sensor_msgs::ImuConstPtr &raw_imu_msg);
   void LaserOdomHandler(const nav_msgs::OdometryConstPtr &laser_odom_msg);
@@ -101,12 +107,12 @@ class MeasurementManager {
   MeasurementManagerConfig mm_config_;
 
   mutex buf_mutex_;
+  mutex odom_mutex_;
   mutex state_mutex_;
   mutex thread_mutex_;
   std::condition_variable con_;
   queue<ImuMsgConstPtr> imu_buf_;
-  queue<geometry_msgs::AccelStampedConstPtr> imu_accel_buf_;
-  queue<nav_msgs::OdometryConstPtr> imu_odom_buf_;
+  nav_msgs::OdometryConstPtr odom_msg_recent_;
   queue<OdomMsgConstPtr> laser_odom_buf_;
   queue<CompactDataConstPtr> compact_data_buf_;
 

@@ -70,7 +70,8 @@ int main(int argc, char **argv) {
   } else if (sensor_type == 64) {
     processor = PointProcessor(-24.9f, 2, 64);
   } else if (sensor_type == 320) {
-    processor = PointProcessor(-25, 15, 32, true);
+//    processor = PointProcessor(-25, 15, 32, true);
+    processor = PointProcessor(-25, 15, 32, false);
   }
 
   PointProcessorConfig config;
@@ -79,6 +80,7 @@ int main(int argc, char **argv) {
   processor.SetupConfig(config);
 
   LOG(INFO) << "Sensor type: " << processor.laser_scans.size();
+  LOG(INFO) << PCL_VERSION << processor.laser_scans.size();
 
   processor.SetupRos(nh);
 

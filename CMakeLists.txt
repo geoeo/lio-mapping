@@ -13,6 +13,7 @@ set(CMAKE_BUILD_TYPE "Release")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+
 find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure
   geometry_msgs
@@ -38,7 +39,8 @@ include_directories(${GFLAGS_INCLUDE_DIRS} ${GLOG_INCLUDE_DIRS})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-find_package(PCL REQUIRED)
+
+find_package(PCL 1.9.1 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 
 find_package(OpenCV REQUIRED)

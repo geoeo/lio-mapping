@@ -7,10 +7,10 @@
   </node>
 
 <!--  <node pkg="lio" type="lio_estimator_node" name="lio_estimator" output="screen">-->
-<!--    <param name="config_file" type="string" value="/home/marc/ROS/LIO/src/lio-mapping/config/indoor_test_config_avl.yaml" />-->
+<!--    <param name="config_file" type="string" value="/home/marc/ROS/LIO/src/lio-mapping/config/outdoor_test_config_avl.yaml" />-->
 <!--	<param name="no_deskew" type="bool" value="true" />-->
 <!--	<remap from="/imu/accel" to="/gnss/imustamped"/>-->
-<!--	<remap from="/imu/odom" to="/gnss/imustamped"/>-->
+<!--	<remap from="/imu/odom" to="/gnss/odometry"/>-->
 <!--  </node>-->
 
 </launch>

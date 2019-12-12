@@ -762,6 +762,12 @@ void PointMapping::TransformAssociateToMap() {
 
 void PointMapping::TransformUpdate() {
   transform_bef_mapped_ = transform_sum_;
+//  Eigen::Matrix4d ros_align;
+//    ros_align << 0, 1, 0, 0,
+//                -1, 0, 0, 0,
+//                 0, 0, 1, 0,
+//                 0, 0, 0, 1;
+
   transform_aft_mapped_ = transform_tobe_mapped_;
 }
 

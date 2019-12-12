@@ -166,7 +166,8 @@ void Run() {
 //    boost::this_thread::sleep(boost::posix_time::microseconds(100000));
 //  }
 
-  ros::Rate r(1000);
+//  ros::Rate r(1000);
+  ros::Rate r(10);
 
   while (ros::ok()) {
     ros::spinOnce();
@@ -186,7 +187,7 @@ int main(int argc, char **argv) {
     nh_ptr = boost::make_shared<ros::NodeHandle>(nh);
   }
 
-  nh_ptr->param("config_file", config_file, std::string("/home/marc/ROS/LIO/src/lio-mapping/config/indoor_test_config.yaml"));
+  nh_ptr->param("config_file", config_file, std::string("/home/marc/ROS/LIO/src/lio-mapping/config/outdoor_test_config_avl.yaml"));
   FLAGS_alsologtostderr = true;
 
   Run();
