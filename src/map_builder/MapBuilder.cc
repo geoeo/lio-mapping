@@ -87,15 +87,7 @@ void MapBuilder::Transform4DUpdate() {
 
   transform_bef_mapped_ = transform_sum_;
 
-    Eigen::Matrix4f ros_mat;
-    ros_mat << 0, 1, 0, 0,
-              -1, 0, 0, 0,
-               0, 0, 1, 0,
-               0, 0, 0, 1;
-    Eigen::Transform<float, 3, Eigen::TransformTraits::Affine> ros_affine = Eigen::Transform<float, 3, Eigen::TransformTraits::Affine>(ros_mat);
-    auto ros_odom = lio::Twist<float>(ros_affine);
-
-  transform_aft_mapped_ = ros_odom*transform_tobe_mapped_;
+  transform_aft_mapped_ = ros_lio_*transform_tobe_mapped_;
 //  transform_aft_mapped_ = transform_tobe_mapped_;
 }
 
@@ -109,6 +101,14 @@ MapBuilder::MapBuilder(MapBuilderConfig config) {
   min_plane_dis_ = config.min_plane_dis;
 
   config_ = config;
+
+    Eigen::Matrix4f ros_mat;
+    ros_mat << 0, 1, 0, 0,
+            -1, 0, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1;
+    Eigen::Transform<float, 3, Eigen::TransformTraits::Affine> ros_affine = Eigen::Transform<float, 3, Eigen::TransformTraits::Affine>(ros_mat);
+    ros_lio_ = lio::Twist<float>(ros_affine);
 }
 
 void MapBuilder::SetupRos(ros::NodeHandle &nh) {
@@ -239,14 +239,7 @@ void MapBuilder::ProcessMap() {
     transform_bef_mapped_ = transform_sum_;
     transform_tobe_mapped_ = transform_sum_;
 
-      Eigen::Matrix4f ros_mat;
-      ros_mat << 0, 1, 0, 0,
-              -1, 0, 0, 0,
-              0, 0, 1, 0,
-              0, 0, 0, 1;
-      Eigen::Transform<float, 3, Eigen::TransformTraits::Affine> ros_affine = Eigen::Transform<float, 3, Eigen::TransformTraits::Affine>(ros_mat);
-      auto ros_odom = lio::Twist<float>(ros_affine);
-    transform_aft_mapped_ = ros_odom*transform_tobe_mapped_;
+    transform_aft_mapped_ = ros_lio_*transform_tobe_mapped_;
 //    transform_aft_mapped_ = transform_tobe_mapped_;
   }
 

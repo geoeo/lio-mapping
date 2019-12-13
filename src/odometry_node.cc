@@ -62,7 +62,8 @@ int main(int argc, char **argv) {
   odometry.SetupRos(nh);
   odometry.Reset();
 
-  ros::Rate r(100);
+//  ros::Rate r(100);
+  ros::Rate r(10);
   while (ros::ok()) {
     odometry.Process();
     ros::spinOnce();

@@ -64,7 +64,8 @@ int main(int argc, char **argv) {
   mapper.SetupRos(nh);
   mapper.Reset();
 
-  ros::Rate r(100);
+//  ros::Rate r(100);
+  ros::Rate r(10);
   while (ros::ok()) {
     mapper.Process();
     ros::spinOnce();

@@ -64,6 +64,7 @@ class MapBuilder : public PointMapping {
   int skip_count_ = 2;
   MapBuilderConfig config_;
   int odom_count_ = 0;
+  Transform ros_lio_;
 
 };
 
