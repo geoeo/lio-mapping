@@ -93,22 +93,15 @@ void MapBuilder::Transform4DUpdate() {
 
 MapBuilder::MapBuilder(MapBuilderConfig config) {
 
-  down_size_filter_corner_.setLeafSize(config.corner_filter_size, config.corner_filter_size, config.corner_filter_size);
-  down_size_filter_surf_.setLeafSize(config.surf_filter_size, config.surf_filter_size, config.surf_filter_size);
-  down_size_filter_map_.setLeafSize(config.map_filter_size, config.map_filter_size, config.map_filter_size);
+    down_size_filter_corner_.setLeafSize(config.corner_filter_size, config.corner_filter_size,
+                                         config.corner_filter_size);
+    down_size_filter_surf_.setLeafSize(config.surf_filter_size, config.surf_filter_size, config.surf_filter_size);
+    down_size_filter_map_.setLeafSize(config.map_filter_size, config.map_filter_size, config.map_filter_size);
 
-  min_match_sq_dis_ = config.min_match_sq_dis;
-  min_plane_dis_ = config.min_plane_dis;
+    min_match_sq_dis_ = config.min_match_sq_dis;
+    min_plane_dis_ = config.min_plane_dis;
 
-  config_ = config;
-
-    Eigen::Matrix4f ros_mat;
-    ros_mat << 0, 1, 0, 0,
-            -1, 0, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1;
-    Eigen::Transform<float, 3, Eigen::TransformTraits::Affine> ros_affine = Eigen::Transform<float, 3, Eigen::TransformTraits::Affine>(ros_mat);
-    ros_lio_ = lio::Twist<float>(ros_affine);
+    config_ = config;
 }
 
 void MapBuilder::SetupRos(ros::NodeHandle &nh) {
@@ -118,10 +111,28 @@ void MapBuilder::SetupRos(ros::NodeHandle &nh) {
 
   nh.param("enable_4d", enable_4d_, true);
   nh.param("skip_count", skip_count_, 2);
+  nh.param("use_ros_transform", use_ros_transform_, false);
 
   pub_laser_cloud_surround_ = nh.advertise<sensor_msgs::PointCloud2>("laser_cloud_surround", 2);
   pub_full_cloud_ = nh.advertise<sensor_msgs::PointCloud2>("cloud_registered", 2);
   pub_odom_aft_mapped_ = nh.advertise<nav_msgs::Odometry>("aft_mapped_to_init", 5);
+
+    Eigen::Matrix4f ros_mat;
+    if (use_ros_transform_) {
+        ros_mat << 0, 1, 0, 0,
+                -1, 0, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+    } else {
+        ros_mat << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+    }
+
+    Eigen::Transform<float, 3, Eigen::TransformTraits::Affine> ros_affine = Eigen::Transform<float, 3, Eigen::TransformTraits::Affine>(
+            ros_mat);
+    ros_lio_ = lio::Twist<float>(ros_affine);
 
   /// for test
 //  pub_diff_odometry_ = nh.advertise<nav_msgs::Odometry>("/laser_odom_to_last", 5);

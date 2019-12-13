@@ -64,6 +64,7 @@ int main(int argc, char **argv) {
   MapBuilderConfig config;
   config.map_filter_size = 0.2;
 
+
   MapBuilder mapper(config);
   mapper.SetupRos(nh);
   mapper.Reset();
